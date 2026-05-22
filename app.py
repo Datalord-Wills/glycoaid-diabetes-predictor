@@ -151,19 +151,6 @@ def train_models():
     return model, model_log, X_train, X_test, y_train, y_test, X.columns.tolist()
 
 
-# ── Load saved models ──────────────────────────────────────────────────────────
-@st.cache_resource
-def load_saved_models():
-    dt_model, log_model = None, None
-    try:
-        dt_model = joblib.load("Model.pkl")
-    except Exception:
-        pass
-    try:
-        log_model = joblib.load("Model_log.pkl")
-    except Exception:
-        pass
-    return dt_model, log_model
 
 
 # ── Gauge chart ────────────────────────────────────────────────────────────────
@@ -241,11 +228,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 with st.spinner("Loading models — please wait..."):
-    saved_dt, saved_log = load_saved_models()
     model, model_log, X_train, X_test, y_train, y_test, feature_names = train_models()
-    # Use saved model if available, otherwise use trained GridSearchCV model
-    primary_dt  = saved_dt  if saved_dt  is not None else model
-    primary_log = saved_log if saved_log is not None else model_log
+    primary_dt  = model
+    primary_log = model_log
 
 
 # ── Tabs ───────────────────────────────────────────────────────────────────────
